@@ -148,24 +148,25 @@
   }
 
   function buildCategories(items){
-    const cats = [...new Set(items.map(i=>i.category))];
+    const cats = [...new Set(items.map(i => i.category))];
+
     categories = cats.map(cat => {
-      const arCat = items.find(i=>i.category===cat)?.ar_category || cat;
-      return {en: cat, ar: arCat};
+      const arCat = items.find(i => i.category === cat)?.ar_category || cat;
+      return { en: cat, ar: arCat };
     });
 
     const container = q('#categoryList');
-    container.querySelectorAll('.category-item').forEach(n=>n.remove());
+    container.querySelectorAll('.category-item').forEach(n => n.remove());
 
-    categories.forEach((c, idx)=>{
+    categories.forEach(c => {
       const el = document.createElement('div');
       el.className = 'category-item';
       el.dataset.en = c.en;
       el.dataset.ar = c.ar;
-        if(window.innerWidth <= 900) q('.sidebar').classList.remove('open');
-      });
+      el.textContent = lang === 'ar' ? c.ar : c.en;
       container.appendChild(el);
-    };
+    });
+  }
 
   function renderMenu(filterCategory=null){
     const container = q('#menuContent');
