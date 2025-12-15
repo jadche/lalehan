@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lalehan - Menu</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+
+  <style>
+    :root{
+      --accent:#7D3C1F;
+      --bg:#ffffff;
+      --muted:#6b6b6b;
+      --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      --radius:12px;
+      --max-width:1100px;
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:var(--bg);
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:20px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .wrap{width:100%;max-width:var(--max-width);}
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:18px;border-radius:14px;box-shadow:var(--card-shadow);background:#fff;margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:14px;
+    }
+    .logo{width:58px;height:58px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#5b2916);overflow:hidden;display:block;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;}
+    .brand h1{margin:0;font-size:20px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .lang-toggle{display:flex;align-items:center;background:#fff;border-radius:999px;padding:6px;border:1px solid #eee;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
+    .lang-toggle button{border:0;background:transparent;padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600}
+    .lang-toggle button.active{background:var(--accent);color:white}
+
+    main{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}
+
+    .sidebar{position:sticky;top:20px}
+    .category-list{background:#fff;padding:12px;border-radius:12px;box-shadow:var(--card-shadow)}
+    .category-list h3{margin:0 0 8px 0}
+    .category-item{padding:10px;border-radius:10px;cursor:pointer;margin-bottom:6px}
+    .category-item.active{background:linear-gradient(90deg,rgba(125,60,31,0.06),rgba(125,60,31,0.02));border-left:3px solid var(--accent)}
+
+    .menu-area{display:flex;flex-direction:column;gap:18px}
+    .category-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+    .card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--card-shadow);display:flex;flex-direction:column}
+    .card .media{height:160px;background:#f3f3f3;display:flex;align-items:center;justify-content:center}
+    .card img{width:100%;height:100%;object-fit:cover}
+    .card .body{padding:12px}
+    .title-row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+    .item-title{font-weight:700;margin:0;font-size:16px}
+    .item-desc{margin:8px 0 0 0;color:var(--muted);font-size:13px}
+    .price{font-weight:800;color:var(--accent);font-size:15px}
+
+    footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media (max-width:900px){
+      main{grid-template-columns:1fr;}
+      .category-section{grid-template-columns:1fr;}
+    }
+
+    .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="https://i.imgur.com/Fub0z8r.jpeg" alt="Lalehan Logo" style="width:100%;height:100%;object-fit:contain;display:block;">
+        </div>
+        <div>
+          <h1 id="brandName">Lalehan</h1>
+          <p id="brandTag"> </p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="lang-toggle" role="tablist" aria-label="Language Switch">
+          <button id="btn-en">EN</button>
+          <button id="btn-ar" class="active">ع</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <aside class="sidebar">
+        <div class="category-list" id="categoryList">
+          <h3 id="catTitle">Categories</h3>
+        </div>
+      </aside>
+
+      <section class="menu-area">
+        <div id="menuContent"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div id="footerText">Open daily · Fresh home-style Turkish food</div>
+    </footer>
+  </div>
+
+  <script>
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
+  const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان', tagEn: ' ', tagAr: 'مأكولات تركية منزلية'};
+
+  let data = [], categories = [], lang = 'ar';
+
+  function q(sel, el=document){return el.querySelector(sel)}
+  function qAll(sel, el=document){return Array.from(el.querySelectorAll(sel))}
+
+  function parseCSVText(csvText){
+    const parsed = Papa.parse(csvText, {header:true, skipEmptyLines:true});
+    return parsed.data.map(row => ({
+      id: row.id || Math.random().toString(36).slice(2,9),
+      category: (row.category||'Uncategorized').trim(),
+      ar_category: row.ar_category || (row.category||'Uncategorized').trim(),
+      price: row.price || '',
+      ar_name: row.ar_name || '',
+      en_name: row.en_name || '',
+      ar_desc: row.ar_desc || '',
+      en_desc: row.en_desc || '',
+      calories: row.calories || '',
+      image_url: row.image_url || '',
+      available: (String(row.available||'TRUE').toLowerCase() !== 'false')
+    }));
+  }
+
+  function buildCategories(items){
+    const cats = [...new Set(items.map(i=>i.category))];
+    categories = cats.map(cat => {
+      const arCat = items.find(i=>i.category===cat)?.ar_category || cat;
+      return {en: cat, ar: arCat};
+    });
+
+    const container = q('#categoryList');
+    container.querySelectorAll('.category-item').forEach(n=>n.remove());
+
+    categories.forEach((c, idx)=>{
+      const el = document.createElement('div');
+      el.className = 'category-item';
+      el.dataset.en = c.en;
+      el.dataset.ar = c.ar;
+        if(window.innerWidth <= 900) q('.sidebar').classList.remove('open');
+      });
+      container.appendChild(el);
+    });
+  }
+
+  function renderMenu(filterCategory=null){
+    const container = q('#menuContent');
+    container.innerHTML = '';
+    const cats = filterCategory ? [filterCategory] : categories.map(c=>c.en);
+
+    cats.forEach(cat => {
+      const sectionTitle = document.createElement('h2');
+      sectionTitle.textContent = (lang==='ar') ? (data.find(i=>i.category===cat)?.ar_category || cat) : cat;
+      sectionTitle.style.margin = '6px 0 6px 0';
+      container.appendChild(sectionTitle);
+
+      const grid = document.createElement('div');
+      grid.className = 'category-section';
+
+      data.filter(i=>i.category===cat && i.available).forEach(item => {
+        const card = document.createElement('div'); card.className = 'card';
+        const media = document.createElement('div'); media.className = 'media';
+        if(item.image_url){
+          const img = document.createElement('img'); img.src = item.image_url; img.alt = item.en_name || item.ar_name;
+          media.appendChild(img);
+        } else {
+          media.textContent = (lang==='ar') ? item.ar_name || item.en_name : item.en_name || item.ar_name;
+        }
+
+        const body = document.createElement('div'); body.className = 'body';
+        const titleRow = document.createElement('div'); titleRow.className = 'title-row';
+        const title = document.createElement('div'); title.className = 'item-title';
+        title.textContent = (lang==='ar') ? (item.ar_name || item.en_name) : (item.en_name || item.ar_name);
+
+        const price = document.createElement('div'); price.className = 'price';
+        if(item.price){
+          price.innerHTML = item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" style="width:16px;height:16px;vertical-align:middle;margin-left:2px">';
+        }
+
+        if(lang==='ar'){
+          titleRow.appendChild(price);
+          titleRow.appendChild(title);
+        } else {
+          titleRow.appendChild(title);
+          titleRow.appendChild(price);
+        }
+
+        const desc = document.createElement('div'); desc.className = 'item-desc';
+        desc.textContent = (lang==='ar') ? (item.ar_desc || '') : (item.en_desc || '');
+
+        body.appendChild(titleRow);
+        body.appendChild(desc);
+
+        if(item.calories){
+          const cal = document.createElement('div');
+          cal.style.marginTop = '6px';
+          cal.style.fontSize = '12px';
+          cal.style.color = '#7D3C1F';
+          cal.textContent = lang === 'ar'
+            ? item.calories + 'سعرة'
+            : item.calories + ' kcal';
+          body.appendChild(cal);
+        }
+        card.appendChild(media);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    });
+
+    // adjust title-row direction
+    qAll('.title-row').forEach(row=>{
+      row.style.flexDirection = lang==='ar' ? 'row-reverse' : 'row';
+      row.style.textAlign = lang==='ar' ? 'right' : 'left';
+    });
+
+    applyLanguageDirection();
+  }
+
+  function applyLanguageDirection(){
+    const root = document.documentElement;
+    const wrap = document.querySelector('.wrap');
+    const categoryItems = qAll('.category-item');
+
+    if(lang==='ar'){
+      wrap.classList.add('arabic');
+      root.lang='ar'; root.dir='rtl';
+      q('#brandName').textContent=BRAND.nameAr;
+      q('#brandTag').textContent=BRAND.tagAr;
+      q('#catTitle').textContent='الأقسام';
+      q('#footerText').textContent='مفتوح يومياً · مأكولات تركية منزلية طازجة';
+      q('#btn-en').classList.remove('active'); q('#btn-ar').classList.add('active');
+      categoryItems.forEach(el=>el.textContent=el.dataset.ar);
+    } else {
+      wrap.classList.remove('arabic');
+      root.lang='en'; root.dir='ltr';
+      q('#brandName').textContent=BRAND.nameEn;
+      q('#brandTag').textContent=BRAND.tagEn;
+      q('#catTitle').textContent='Categories';
+      q('#footerText').textContent='Open daily · Fresh home-style Turkish food';
+      q('#btn-en').classList.add('active'); q('#btn-ar').classList.remove('active');
+      categoryItems.forEach(el=>el.textContent=el.dataset.en);
+    }
+  }
+
+  async function fetchSheet(){
+    try{
+      const res = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      data = parseCSVText(text);
+      buildCategories(data);
+
+      // default category: Starters
+      const defaultCategory = data.find(i=>i.category.toLowerCase().includes('starter'))?.category || categories[0].en;
+      qAll('.category-item').forEach(el=>{
+        el.classList.remove('active');
+        if(el.dataset.en === defaultCategory) el.classList.add('active');
+      });
+      renderMenu(null); // render all categories
+    }catch(err){
+      console.error('Failed to load sheet', err);
+      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">Failed to load the menu. Make sure you published the Google Sheet and set SHEET_CSV_URL correctly in the config at top of this file.</div>';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    q('#btn-en').addEventListener('click', ()=>{
+      lang='en';
+      const cat = document.querySelector('.category-item.active')?.dataset.en || categories[0].en;
+      renderMenu(cat);
+    });
+    q('#btn-ar').addEventListener('click', ()=>{
+      lang='ar';
+      const cat = document.querySelector('.category-item.active')?.dataset.en || categories[0].en;
+      renderMenu(cat);
+    });
+
+    applyLanguageDirection();
+
+    if(SHEET_CSV_URL && !SHEET_CSV_URL.includes('REPLACE_WITH')) fetchSheet();
+    else {
+      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">⚠️ Please follow the instructions at the top of the file and set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
+    }
+  });
+  </script>
+</body>
+</html>
