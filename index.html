@@ -81,7 +81,7 @@
         </div>
         <div>
           <h1 id="brandName">Lalehan</h1>
-          <p id="brandTag"> </p>
+          <p id="brandTag">نكهات تُطهى بشغف</p>
         </div>
       </div>
 
@@ -102,20 +102,21 @@
       <section id="contactSection" style="margin-top:40px;padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
         <h2 id="contactTitle">Contact</h2>
         <p id="contactPhone">Phone: <a href="tel:+966500000000">050 000 0000</a></p>
-        <p id="contactHours">Open: 11:00 AM – 11:00 PM</p>
-        <p id="contactDirections"><a href="https://goo.gl/maps/..." target="_blank">Get Directions</a></p>
+        <p id="contactHours"></p>
+        <p id="contactAddress"></p>
+        <p id="contactDirections"><a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Get Directions</a></p>
       </section>
     </main>
 
     <footer>
-      <div id="footerText">Open daily · Fresh home-style Turkish food</div>
+      <div id="footerText"></div>
     </footer>
   </div>
 
   <script>
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
-  const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان', tagEn: ' ', tagAr: 'مأكولات تركية منزلية'};
-  let data = [], categories = [], lang = 'ar';
+  const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان'};
+  let data = [], lang = 'ar';
 
   function q(sel, el=document){return el.querySelector(sel)}
   function qAll(sel, el=document){return Array.from(el.querySelectorAll(sel))}
@@ -137,14 +138,10 @@
     }));
   }
 
-  function renderMenu(filterCategory=null){
+  function renderMenu(){
     const container = q('#menuContent');
     container.innerHTML = '';
-
-    // Merge all categories including catering
-    const cats = filterCategory
-      ? [filterCategory]
-      : [...new Set(data.map(i => i.category))];
+    const cats = [...new Set(data.map(i => i.category))];
 
     cats.forEach(cat => {
       const activeItems = data.filter(i => i.category === cat && i.available);
@@ -211,7 +208,6 @@
       container.appendChild(grid);
     });
 
-    // adjust title-row direction
     qAll('.title-row').forEach(row=>{
       row.style.flexDirection = lang==='ar' ? 'row-reverse' : 'row';
       row.style.textAlign = lang==='ar' ? 'right' : 'left';
@@ -229,13 +225,14 @@
       root.lang = 'ar';
       root.dir = 'rtl';
       q('#brandName').textContent = BRAND.nameAr;
-      q('#brandTag').textContent = BRAND.tagAr;
-      q('#footerText').textContent = 'مفتوح يومياً · مأكولات تركية منزلية طازجة';
+      q('#brandTag').textContent = 'نكهات تُطهى بشغف';
+      q('#footerText').textContent = 'مطعم أكل تركي في المدينة المنورة نكهات تُطهى بشغف';
 
       q('#contactTitle').textContent = 'تواصل معنا';
       q('#contactPhone').innerHTML = 'الهاتف: <a href="tel:+966500000000">050 000 0000</a>';
-      q('#contactHours').textContent = 'ساعات العمل: 11 صباحاً – 11 مساءً';
-      q('#contactDirections').innerHTML = '<a href="https://goo.gl/maps/..." target="_blank">كيفية الوصول</a>';
+      q('#contactHours').innerHTML = 'ساعات العمل:<br>الأحد – الخميس: 11 صباحاً – 1 صباحاً<br>الجمعة: 1 مساءً – 1 صباحاً';
+      q('#contactAddress').textContent = 'حازم بن عطاء، وادي محضر، المدينة المنورة';
+      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">موقعنا</a>';
 
       q('#btn-en').classList.remove('active');
       q('#btn-ar').classList.add('active');
@@ -244,13 +241,14 @@
       root.lang = 'en';
       root.dir = 'ltr';
       q('#brandName').textContent = BRAND.nameEn;
-      q('#brandTag').textContent = BRAND.tagEn;
-      q('#footerText').textContent = 'Open daily · Fresh home-style Turkish food';
+      q('#brandTag').textContent = '';
+      q('#footerText').textContent = 'Turkish Restaurant • Grab & Go';
 
       q('#contactTitle').textContent = 'Contact';
       q('#contactPhone').innerHTML = 'Phone: <a href="tel:+966500000000">050 000 0000</a>';
-      q('#contactHours').textContent = 'Open: 11:00 AM – 11:00 PM';
-      q('#contactDirections').innerHTML = '<a href="https://goo.gl/maps/..." target="_blank">Get Directions</a>';
+      q('#contactHours').innerHTML = 'Open: 11:00 AM – 1:00 AM (Sun–Thu)<br>Friday: 1:00 PM – 1:00 AM';
+      q('#contactAddress').textContent = 'Hazem Bin Atta, Wadi Mahzur, Madina';
+      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Get Directions</a>';
 
       q('#btn-en').classList.add('active');
       q('#btn-ar').classList.remove('active');
@@ -262,12 +260,11 @@
       const res = await fetch(SHEET_CSV_URL);
       const text = await res.text();
       data = parseCSVText(text);
-      categories = [...new Set(data.map(i => i.category))];
-      renderMenu(); // render everything
+      renderMenu();
     }catch(err){
       console.error('Failed to load sheet', err);
       q('#menuContent').innerHTML = `
-        <div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
+        <div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">
           Failed to load the menu. Please check the Google Sheet publishing settings.
         </div>`;
     }
@@ -284,11 +281,9 @@
       renderMenu();
     });
 
-    applyLanguageDirection();
-
     if(SHEET_CSV_URL && !SHEET_CSV_URL.includes('REPLACE_WITH')) fetchSheet();
     else {
-      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">⚠️ Please follow the instructions at the top of the file and set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
+      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">⚠️ Please set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
     }
   });
   </script>
