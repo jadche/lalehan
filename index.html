@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lalehan - Menu</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+
+  <style>
+    :root{
+      --accent:#7D3C1F;
+      --bg:#ffffff;
+      --muted:#6b6b6b;
+      --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      --radius:12px;
+      --max-width:1100px;
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:var(--bg);
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:20px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .wrap{width:100%;max-width:var(--max-width);}
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:18px;border-radius:14px;box-shadow:var(--card-shadow);background:#fff;margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:14px;
+    }
+    .logo{width:58px;height:58px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#5b2916);overflow:hidden;display:block;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;}
+    .brand h1{margin:0;font-size:20px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .lang-toggle{display:flex;align-items:center;background:#fff;border-radius:999px;padding:6px;border:1px solid #eee;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
+    .lang-toggle button{border:0;background:transparent;padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600}
+    .lang-toggle button.active{background:var(--accent);color:white}
+
+    main{display:block;}
+
+    .menu-area{display:flex;flex-direction:column;gap:18px}
+    .category-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+    .card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--card-shadow);display:flex;flex-direction:column}
+    .card .media{height:160px;background:#f3f3f3;display:flex;align-items:center;justify-content:center}
+    .card img{width:100%;height:100%;object-fit:cover}
+    .card .body{padding:12px}
+    .title-row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+    .item-title{font-weight:700;margin:0;font-size:16px}
+    .item-desc{margin:8px 0 0 0;color:var(--muted);font-size:13px}
+    .price{font-weight:800;color:var(--accent);font-size:15px}
+
+    footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+
+    .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="https://i.imgur.com/Fub0z8r.jpeg" alt="Lalehan Logo" style="width:100%;height:100%;object-fit:contain;display:block;">
+        </div>
+        <div>
+          <h1 id="brandName">Lalehan</h1>
+          <p id="brandTag"> </p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="lang-toggle" role="tablist" aria-label="Language Switch">
+          <button id="btn-en">EN</button>
+          <button id="btn-ar" class="active">ع</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="menu-area">
+        <div id="menuContent"></div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contactSection" style="margin-top:40px;padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
+        <h2 id="contactTitle">Contact</h2>
+        <p id="contactPhone">Phone: <a href="tel:+966500000000">050 000 0000</a></p>
+        <p id="contactHours">Open: 11:00 AM – 11:00 PM</p>
+        <p id="contactDirections"><a href="https://goo.gl/maps/..." target="_blank">Get Directions</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <div id="footerText">Open daily · Fresh home-style Turkish food</div>
+    </footer>
+  </div>
+
+  <script>
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
+  const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان', tagEn: ' ', tagAr: 'مأكولات تركية منزلية'};
+  let data = [], categories = [], lang = 'ar';
+
+  function q(sel, el=document){return el.querySelector(sel)}
+  function qAll(sel, el=document){return Array.from(el.querySelectorAll(sel))}
+
+  function parseCSVText(csvText){
+    const parsed = Papa.parse(csvText, {header:true, skipEmptyLines:true});
+    return parsed.data.map(row => ({
+      id: row.id || Math.random().toString(36).slice(2,9),
+      category: (row.category||'Uncategorized').trim(),
+      ar_category: row.ar_category || (row.category||'Uncategorized').trim(),
+      price: row.price || '',
+      ar_name: row.ar_name || '',
+      en_name: row.en_name || '',
+      ar_desc: row.ar_desc || '',
+      en_desc: row.en_desc || '',
+      calories: row.calories || '',
+      image_url: row.image_url || '',
+      available: (String(row.available||'TRUE').toLowerCase() !== 'false')
+    }));
+  }
+
+  function renderMenu(filterCategory=null){
+    const container = q('#menuContent');
+    container.innerHTML = '';
+
+    // Merge all categories including catering
+    const cats = filterCategory
+      ? [filterCategory]
+      : [...new Set(data.map(i => i.category))];
+
+    cats.forEach(cat => {
+      const activeItems = data.filter(i => i.category === cat && i.available);
+      if(activeItems.length === 0) return; // skip empty sections
+
+      const sectionTitle = document.createElement('h2');
+      sectionTitle.textContent = (lang==='ar') ? (activeItems[0].ar_category || cat) : cat;
+      sectionTitle.style.margin = '6px 0 6px 0';
+      container.appendChild(sectionTitle);
+
+      const grid = document.createElement('div');
+      grid.className = 'category-section';
+
+      activeItems.forEach(item => {
+        const card = document.createElement('div'); card.className = 'card';
+        const media = document.createElement('div'); media.className = 'media';
+        if(item.image_url){
+          const img = document.createElement('img'); img.src = item.image_url; img.alt = item.en_name || item.ar_name;
+          media.appendChild(img);
+        } else {
+          media.textContent = (lang==='ar') ? item.ar_name || item.en_name : item.en_name || item.ar_name;
+        }
+
+        const body = document.createElement('div'); body.className = 'body';
+        const titleRow = document.createElement('div'); titleRow.className = 'title-row';
+        const title = document.createElement('div'); title.className = 'item-title';
+        title.textContent = (lang==='ar') ? (item.ar_name || item.en_name) : (item.en_name || item.ar_name);
+
+        const price = document.createElement('div'); price.className = 'price';
+        if(item.price){
+          price.innerHTML = item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" style="width:16px;height:16px;vertical-align:middle;margin-left:2px">';
+        }
+
+        if(lang==='ar'){
+          titleRow.appendChild(price);
+          titleRow.appendChild(title);
+        } else {
+          titleRow.appendChild(title);
+          titleRow.appendChild(price);
+        }
+
+        const desc = document.createElement('div'); desc.className = 'item-desc';
+        desc.textContent = (lang==='ar') ? (item.ar_desc || '') : (item.en_desc || '');
+
+        body.appendChild(titleRow);
+        body.appendChild(desc);
+
+        if(item.calories){
+          const cal = document.createElement('div');
+          cal.style.marginTop = '6px';
+          cal.style.fontSize = '12px';
+          cal.style.color = '#7D3C1F';
+          cal.textContent = lang === 'ar'
+            ? item.calories + 'سعرة'
+            : item.calories + ' kcal';
+          body.appendChild(cal);
+        }
+
+        card.appendChild(media);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    });
+
+    // adjust title-row direction
+    qAll('.title-row').forEach(row=>{
+      row.style.flexDirection = lang==='ar' ? 'row-reverse' : 'row';
+      row.style.textAlign = lang==='ar' ? 'right' : 'left';
+    });
+
+    applyLanguageDirection();
+  }
+
+  function applyLanguageDirection(){
+    const root = document.documentElement;
+    const wrap = document.querySelector('.wrap');
+
+    if(lang === 'ar'){
+      wrap.classList.add('arabic');
+      root.lang = 'ar';
+      root.dir = 'rtl';
+      q('#brandName').textContent = BRAND.nameAr;
+      q('#brandTag').textContent = BRAND.tagAr;
+      q('#footerText').textContent = 'مفتوح يومياً · مأكولات تركية منزلية طازجة';
+
+      q('#contactTitle').textContent = 'تواصل معنا';
+      q('#contactPhone').innerHTML = 'الهاتف: <a href="tel:+966500000000">050 000 0000</a>';
+      q('#contactHours').textContent = 'ساعات العمل: 11 صباحاً – 11 مساءً';
+      q('#contactDirections').innerHTML = '<a href="https://goo.gl/maps/..." target="_blank">كيفية الوصول</a>';
+
+      q('#btn-en').classList.remove('active');
+      q('#btn-ar').classList.add('active');
+    } else {
+      wrap.classList.remove('arabic');
+      root.lang = 'en';
+      root.dir = 'ltr';
+      q('#brandName').textContent = BRAND.nameEn;
+      q('#brandTag').textContent = BRAND.tagEn;
+      q('#footerText').textContent = 'Open daily · Fresh home-style Turkish food';
+
+      q('#contactTitle').textContent = 'Contact';
+      q('#contactPhone').innerHTML = 'Phone: <a href="tel:+966500000000">050 000 0000</a>';
+      q('#contactHours').textContent = 'Open: 11:00 AM – 11:00 PM';
+      q('#contactDirections').innerHTML = '<a href="https://goo.gl/maps/..." target="_blank">Get Directions</a>';
+
+      q('#btn-en').classList.add('active');
+      q('#btn-ar').classList.remove('active');
+    }
+  }
+
+  async function fetchSheet(){
+    try{
+      const res = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      data = parseCSVText(text);
+      categories = [...new Set(data.map(i => i.category))];
+      renderMenu(); // render everything
+    }catch(err){
+      console.error('Failed to load sheet', err);
+      q('#menuContent').innerHTML = `
+        <div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
+          Failed to load the menu. Please check the Google Sheet publishing settings.
+        </div>`;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    q('#btn-en').addEventListener('click', ()=>{
+      lang = 'en';
+      renderMenu();
+    });
+
+    q('#btn-ar').addEventListener('click', ()=>{
+      lang = 'ar';
+      renderMenu();
+    });
+
+    applyLanguageDirection();
+
+    if(SHEET_CSV_URL && !SHEET_CSV_URL.includes('REPLACE_WITH')) fetchSheet();
+    else {
+      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">⚠️ Please follow the instructions at the top of the file and set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
+    }
+  });
+  </script>
+</body>
+</html>
