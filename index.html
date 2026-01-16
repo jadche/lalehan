@@ -67,7 +67,7 @@
     .item-desc{margin:8px 0 0 0;color:var(--muted);font-size:13px}
     .price{font-weight:800;color:var(--accent);font-size:15px}
 
-    footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+    footer{margin-top:20px;padding:8px 0;color:var(--muted);font-size:13px;text-align:center}
 
     .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
   </style>
@@ -99,12 +99,12 @@
       </section>
 
       <!-- Contact Section -->
-      <section id="contactSection" style="margin-top:40px;padding:20px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
+      <section id="contactSection" style="margin-top:30px;padding:16px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
         <h2 id="contactTitle">Contact</h2>
         <p id="contactPhone">Phone: <a href="tel:+966500000000">050 000 0000</a></p>
         <p id="contactHours"></p>
+        <p id="contactDirections"><a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Our location</a></p>
         <p id="contactAddress"></p>
-        <p id="contactDirections"><a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Get Directions</a></p>
       </section>
     </main>
 
@@ -226,13 +226,13 @@
       root.dir = 'rtl';
       q('#brandName').textContent = BRAND.nameAr;
       q('#brandTag').textContent = 'نكهات تُطهى بشغف';
-      q('#footerText').textContent = 'مطعم أكل تركي في المدينة المنورة نكهات تُطهى بشغف';
+      q('#footerText').innerHTML = '🍴 مطعم تركي • 🛍️ Grab & Go';
 
       q('#contactTitle').textContent = 'تواصل معنا';
       q('#contactPhone').innerHTML = 'الهاتف: <a href="tel:+966500000000">050 000 0000</a>';
       q('#contactHours').innerHTML = 'ساعات العمل:<br>الأحد – الخميس: 11 صباحاً – 1 صباحاً<br>الجمعة: 1 مساءً – 1 صباحاً';
-      q('#contactAddress').textContent = 'حازم بن عطاء، وادي محضر، المدينة المنورة';
       q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">موقعنا</a>';
+      q('#contactAddress').textContent = 'حازم بن عطاء، وادي محضر، المدينة المنورة';
 
       q('#btn-en').classList.remove('active');
       q('#btn-ar').classList.add('active');
@@ -242,13 +242,13 @@
       root.dir = 'ltr';
       q('#brandName').textContent = BRAND.nameEn;
       q('#brandTag').textContent = '';
-      q('#footerText').textContent = 'Turkish Restaurant • Grab & Go';
+      q('#footerText').innerHTML = '🍴 Turkish Restaurant • 🛍️ Grab & Go';
 
       q('#contactTitle').textContent = 'Contact';
       q('#contactPhone').innerHTML = 'Phone: <a href="tel:+966500000000">050 000 0000</a>';
       q('#contactHours').innerHTML = 'Open: 11:00 AM – 1:00 AM (Sun–Thu)<br>Friday: 1:00 PM – 1:00 AM';
+      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Our location</a>';
       q('#contactAddress').textContent = 'Hazem Bin Atta, Wadi Mahzur, Madina';
-      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Get Directions</a>';
 
       q('#btn-en').classList.add('active');
       q('#btn-ar').classList.remove('active');
