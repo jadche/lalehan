@@ -55,6 +55,148 @@
 
     main{display:block;}
 
+    /* COMBOS SECTION STYLES */
+    .combos-section {
+      margin-bottom: 28px;
+    }
+
+    .combos-header {
+      margin: 0 0 16px 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .combos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .combo-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      border-left: 4px solid var(--accent);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .combo-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .combo-header {
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), #5b2916);
+      color: white;
+    }
+
+    .combo-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+
+    .combo-serves {
+      font-size: 13px;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .combo-body {
+      padding: 16px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .combo-description {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .combo-price-section {
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      padding: 12px 0;
+      margin: 8px 0;
+    }
+
+    .combo-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .combo-price-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .combo-price-label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .combo-price-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sar-icon {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+    }
+
+    .combo-addons {
+      background: #f9f7f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: auto;
+    }
+
+    .addon-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .addon-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 6px 0;
+      color: #333;
+    }
+
+    .addon-price {
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* MENU SECTION STYLES */
     .menu-area{display:flex;flex-direction:column;gap:18px}
     .category-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 
@@ -70,6 +212,20 @@
     footer{margin-top:20px;padding:8px 0;color:var(--muted);font-size:13px;text-align:center}
 
     .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
+
+    /* RTL adjustments for combos */
+    .arabic .combo-price-row {
+      flex-direction: row-reverse;
+    }
+
+    .arabic .addon-item {
+      flex-direction: row-reverse;
+    }
+
+    .arabic .combo-card {
+      border-left: none;
+      border-right: 4px solid var(--accent);
+    }
   </style>
 </head>
 <body>
@@ -94,13 +250,17 @@
     </header>
 
     <main>
+      <section class="combos-section">
+        <h2 class="combos-header" id="combosTitle">الوجبات المميزة</h2>
+        <div id="combosContent" class="combos-grid"></div>
+      </section>
+
       <section class="menu-area">
         <div id="menuContent"></div>
       </section>
 
       <!-- Contact Section -->
       <section id="contactSection" style="margin-top:30px;padding:16px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
-        <h2 id="contactTitle">Contact</h2>
         <p id="contactPhone">Phone: <a href="tel:+966567097574">056 709 7574</a></p>
         <p id="contactHours"></p>
         <p id="contactDirections"><a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">📍Our location</a></p>
@@ -116,6 +276,77 @@
   <script>
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
   const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان'};
+  
+  // Hardcoded combo data based on Excel file
+  const combosData = [
+    {
+      id: 'combo_1',
+      name: 'Lalehan Sofra',
+      ar_name: 'سفرة لاليهان',
+      price: 99,
+      description: 'A warm table made for sharing\n\nChoose 2 mains, 2 sides, and 1 starter\nSome premium dishes carry a small extra charge\nFatteh available as an add-on at a special combo price',
+      ar_description: 'سفرة دافئة للمشاركة.\n\nاختر طبقين رئيسيين + طبقين جانبيين + واحد مقبلات\nبعض الأطباق المميزة عليها زيادة بسيطة\nويمكن إضافة الفتّة بسعر خاص مع السفرة',
+      serves: '2 people',
+      ar_serves: 'شخصين',
+      premium_items: [
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+      ],
+      fatteh_items: [
+        { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 14 },
+        { name: 'Eggplant Fatteh', ar_name: 'فتة باذنجان', price: 14 },
+        { name: 'Chicken Fatteh', ar_name: 'فتة دجاج بالسماق (مسخن)', price: 16 },
+        { name: 'Pasha Eggplant Fatteh', ar_name: 'فتة باذنجان باللحم', price: 18 }
+      ]
+    },
+    {
+      id: 'combo_2',
+      name: 'Ottoman Family Sofra',
+      ar_name: 'سفرة العائلة العثمانية',
+      price: 249,
+      description: 'A table made for sharing\nChoose 4 mains, 2 fatteh, 3 sides, and 2 starters\nSome premium dishes carry a small extra charge\nEnjoy a variety of flavors together, just like at home',
+      ar_description: 'مائدة للمشاركة مع الأحباب\nتحتوي على ٤ أطباق رئيسية، ٢ فتّة، ٣ أطباق جانبية، و٢ مقبلات\nبعض الأطباق المميزة قد تحمل رسوم إضافية بسيطة\nاستمتعوا بتشكيلة من النكهات',
+      serves: '4 people',
+      ar_serves: '4 أشخاص',
+      premium_items: [
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+      ],
+      fatteh_items: [
+        { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 0 },
+        { name: 'Eggplant Fatteh', ar_name: 'فتة باذنجان', price: 0 },
+        { name: 'Chicken Fatteh', ar_name: 'فتة دجاج بالسماق (مسخن)', price: 2 },
+        { name: 'Pasha Eggplant Fatteh', ar_name: 'فتة باذنجان باللحم', price: 4 }
+      ]
+    },
+    {
+      id: 'combo_3',
+      name: 'Lalehan Gathering',
+      ar_name: 'جمعة لاليهان',
+      price: 379,
+      description: 'Our most generous sharing meal\nChoose 6 mains, 3 fatteh, 5 sides, and 3 starters\nSome premium dishes carry a small extra charge\nA complete spread of Lalehan\'s signature comfort dishes, perfect for large gatherings and family meals.',
+      ar_description: 'أكبر وجبة مشاركة لدينا.\nتحتوي على ٦ أطباق رئيسية، ٣ فتّة، ٥ أطباق جانبية، و٣ مقبلات\nبعض الأطباق المميزة قد تحمل رسوم إضافية بسيطة\nتشكيلة كاملة من أطباق لالهان المميزة، مثالية للعزائم والجمعات الكبيرة',
+      serves: '6 people',
+      ar_serves: '6 أشخاص',
+      premium_items: [
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+      ],
+      fatteh_items: [
+        { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 0 },
+        { name: 'Eggplant Fatteh', ar_name: 'فتة باذنجان', price: 0 },
+        { name: 'Chicken Fatteh', ar_name: 'فتة دجاج بالسماق (مسخن)', price: 2 },
+        { name: 'Pasha Eggplant Fatteh', ar_name: 'فتة باذنجان باللحم', price: 4 }
+      ]
+    }
+  ];
+
   let data = [], lang = 'ar';
 
   function q(sel, el=document){return el.querySelector(sel)}
@@ -136,6 +367,122 @@
       image_url: row.image_url || '',
       available: (String(row.available||'TRUE').toLowerCase() !== 'false')
     }));
+  }
+
+  function renderCombos(){
+    const container = q('#combosContent');
+    container.innerHTML = '';
+
+    combosData.forEach(combo => {
+      const card = document.createElement('div');
+      card.className = 'combo-card';
+
+      // Header with name and serves
+      const header = document.createElement('div');
+      header.className = 'combo-header';
+
+      const name = document.createElement('h3');
+      name.className = 'combo-name';
+      name.textContent = lang === 'ar' ? combo.ar_name : combo.name;
+
+      const serves = document.createElement('p');
+      serves.className = 'combo-serves';
+      serves.textContent = lang === 'ar' ? combo.ar_serves : combo.serves;
+
+      header.appendChild(name);
+      header.appendChild(serves);
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'combo-body';
+
+      // Description
+      const desc = document.createElement('p');
+      desc.className = 'combo-description';
+      desc.textContent = lang === 'ar' ? combo.ar_description : combo.description;
+
+      // Price section
+      const priceSection = document.createElement('div');
+      priceSection.className = 'combo-price-section';
+
+      const priceRow = document.createElement('div');
+      priceRow.className = 'combo-price-row';
+
+      const priceLabel = document.createElement('span');
+      priceLabel.className = 'combo-price-label';
+      priceLabel.textContent = lang === 'ar' ? 'السعر الأساسي' : 'Base Price';
+
+      const priceValue = document.createElement('span');
+      priceValue.className = 'combo-price-value';
+      priceValue.innerHTML = combo.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+
+      priceRow.appendChild(priceLabel);
+      priceRow.appendChild(priceValue);
+      priceSection.appendChild(priceRow);
+
+      // Premium items if any
+      if(combo.premium_items && combo.premium_items.length > 0) {
+        combo.premium_items.forEach(item => {
+          const premiumRow = document.createElement('div');
+          premiumRow.className = 'combo-price-row';
+
+          const premiumLabel = document.createElement('span');
+          premiumLabel.className = 'combo-price-label';
+          premiumLabel.textContent = lang === 'ar' ? item.ar_name : item.name;
+
+          const premiumPrice = document.createElement('span');
+          premiumPrice.className = 'combo-price-value';
+          premiumPrice.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+
+          premiumRow.appendChild(premiumLabel);
+          premiumRow.appendChild(premiumPrice);
+          priceSection.appendChild(premiumRow);
+        });
+      }
+
+      body.appendChild(desc);
+      body.appendChild(priceSection);
+
+      // Add-ons section (Fatteh)
+      if(combo.fatteh_items && combo.fatteh_items.length > 0) {
+        const addons = document.createElement('div');
+        addons.className = 'combo-addons';
+
+        const addonTitle = document.createElement('p');
+        addonTitle.className = 'addon-title';
+        addonTitle.textContent = lang === 'ar' ? 'خيارات الفتة' : 'Fatteh Options';
+
+        addons.appendChild(addonTitle);
+
+        combo.fatteh_items.forEach(item => {
+          const addonItem = document.createElement('div');
+          addonItem.className = 'addon-item';
+
+          const addonLabel = document.createElement('span');
+          addonLabel.textContent = lang === 'ar' ? item.ar_name : item.name;
+
+          const addonPrice = document.createElement('span');
+          addonPrice.className = 'addon-price';
+          
+          if(item.price === 0) {
+            addonPrice.textContent = lang === 'ar' ? 'مضمن' : 'Included';
+            addonPrice.style.color = '#27ae60';
+          } else {
+            addonPrice.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+          }
+
+          addonItem.appendChild(addonLabel);
+          addonItem.appendChild(addonPrice);
+          addons.appendChild(addonItem);
+        });
+
+        body.appendChild(addons);
+      }
+
+      card.appendChild(header);
+      card.appendChild(body);
+      container.appendChild(card);
+    });
   }
 
   function renderMenu(){
@@ -226,9 +573,10 @@
       root.dir = 'rtl';
       q('#brandName').textContent = BRAND.nameAr;
       q('#brandTag').textContent = 'نكهات تُطهى بشغف';
+      q('#combosTitle').textContent = 'الوجبات المميزة';
       q('#footerText').innerHTML = '🍴 مطعم تركي • 🛍️ Grab & Go';
 
-      q('#contactPhone').innerHTML = '📞: <a href="tel:+966567097574">056 709 7574</a>';
+      q('#contactPhone').innerHTML = '📞 <a href="tel:+966567097574">0567097574</a>';
       q('#contactHours').innerHTML = 'ساعات العمل:<br>الأحد – الخميس: 11 صباحاً – 1 صباحاً<br>الجمعة: 1 مساءً – 1 صباحاً';
       q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">📍موقعنا</a>';
       q('#contactAddress').textContent = 'حازم بن عطاء، وادي مهزور، المدينة المنورة';
@@ -241,16 +589,19 @@
       root.dir = 'ltr';
       q('#brandName').textContent = BRAND.nameEn;
       q('#brandTag').textContent = '';
+      q('#combosTitle').textContent = 'Special Combos';
       q('#footerText').innerHTML = '🍴 Turkish Restaurant • 🛍️ Grab & Go';
 
       q('#contactPhone').innerHTML = 'Phone: <a href="tel:+966567097574">056 709 7574</a>';
-      q('#contactHours').innerHTML = 'Open: 11:00 AM – 1:00 AM (Sun–Thu)<br>Friday: 1:00 PM – 1:00 AM';
+      q('#contactHours').innerHTML = 'Sun–Thu: 11:00 AM – 1:00 AM<br>Friday: 1:00 PM – 1:00 AM';
       q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">📍Our location</a>';
       q('#contactAddress').textContent = 'Hazem Bin Atta, Wadi Mahzur, Madina';
 
       q('#btn-en').classList.add('active');
       q('#btn-ar').classList.remove('active');
     }
+
+    renderCombos();
   }
 
   async function fetchSheet(){
@@ -283,6 +634,9 @@
     else {
       q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">⚠️ Please set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
     }
+
+    // Initial render
+    renderCombos();
   });
   </script>
 </body>
