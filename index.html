@@ -81,36 +81,49 @@
       box-shadow: var(--card-shadow);
       display: flex;
       flex-direction: column;
-      border-left: 4px solid var(--accent);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .combo-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-top: 4px solid var(--accent);
+      transition: transform 0.2s ease;
     }
 
     .combo-header {
       padding: 16px;
-      background: linear-gradient(135deg, var(--accent), #5b2916);
-      color: white;
+      background: #fdfaf8;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .combo-name-group {
+      display: flex;
+      flex-direction: column;
     }
 
     .combo-name {
       font-size: 18px;
       font-weight: 700;
-      margin: 0 0 4px 0;
+      margin: 0;
+      color: var(--accent);
     }
 
     .combo-serves {
-      font-size: 13px;
-      opacity: 0.9;
-      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 2px 0 0 0;
+    }
+
+    .combo-base-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      direction: ltr;
     }
 
     .combo-body {
       padding: 16px;
-      flex-grow: 1;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -124,76 +137,71 @@
       white-space: pre-wrap;
     }
 
-    .combo-price-section {
-      border-top: 1px solid #eee;
-      border-bottom: 1px solid #eee;
-      padding: 12px 0;
-      margin: 8px 0;
-    }
-
-    .combo-price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 13px;
-    }
-
-    .combo-price-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .combo-price-label {
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .combo-price-value {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .sar-icon {
-      width: 14px;
-      height: 14px;
-      vertical-align: middle;
-    }
-
-    .combo-addons {
-      background: #f9f7f5;
-      padding: 12px;
+    /* View Choices Toggle */
+    .choices-toggle {
+      background: none;
+      border: 1px solid #eee;
+      padding: 8px 12px;
       border-radius: 8px;
-      margin-top: auto;
-    }
-
-    .addon-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      margin: 0 0 8px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .addon-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-size: 13px;
-      padding: 6px 0;
-      color: #333;
-    }
-
-    .addon-price {
       font-weight: 600;
       color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    .choices-toggle:hover {
+      background: #fdfaf8;
+    }
+
+    .choices-content {
+      display: none;
+      padding: 12px;
+      background: #f9f7f5;
+      border-radius: 8px;
+      margin-top: 8px;
+      border: 1px dashed #ddd;
+    }
+
+    .choices-content.active {
+      display: block;
+    }
+
+    .choice-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 8px 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+
+    .choice-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+
+    .choice-price {
+      font-weight: 600;
+      color: var(--accent);
+      direction: ltr;
       display: flex;
       align-items: center;
       gap: 2px;
+    }
+
+    .choice-price.included {
+      color: #27ae60;
     }
 
     /* MENU SECTION STYLES */
@@ -204,27 +212,49 @@
     .card .media{height:160px;background:#f3f3f3;display:flex;align-items:center;justify-content:center}
     .card img{width:100%;height:100%;object-fit:cover}
     .card .body{padding:12px}
-    .title-row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+    
+    .title-row{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:start;
+    }
+    
     .item-title{font-weight:700;margin:0;font-size:16px}
     .item-desc{margin:8px 0 0 0;color:var(--muted);font-size:13px}
-    .price{font-weight:800;color:var(--accent);font-size:15px}
+    
+    .price{
+      font-weight:800;
+      color:var(--accent);
+      font-size:15px;
+      direction: ltr;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
 
     footer{margin-top:20px;padding:8px 0;color:var(--muted);font-size:13px;text-align:center}
 
     .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
 
-    /* RTL adjustments for combos */
-    .arabic .combo-price-row {
-      flex-direction: row-reverse;
+    /* RTL Alignment Fixes */
+    .arabic .title-row {
+      flex-direction: row; /* Keep Price on Left, Title on Right in RTL */
     }
 
-    .arabic .addon-item {
-      flex-direction: row-reverse;
+    .arabic .combo-header {
+      flex-direction: row; /* Keep Price on Left, Name on Right in RTL */
     }
 
-    .arabic .combo-card {
-      border-left: none;
-      border-right: 4px solid var(--accent);
+    .arabic .choice-item {
+      flex-direction: row; /* Keep Price on Left, Label on Right in RTL */
+    }
+
+    .sar-icon {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -277,15 +307,14 @@
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
   const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان'};
   
-  // Hardcoded combo data based on Excel file
   const combosData = [
     {
       id: 'combo_1',
       name: 'Lalehan Sofra',
       ar_name: 'سفرة لاليهان',
       price: 99,
-      description: 'A warm table made for sharing\n\nChoose 2 mains, 2 sides, and 1 starter\nSome premium dishes carry a small extra charge\nFatteh available as an add-on at a special combo price',
-      ar_description: 'سفرة دافئة للمشاركة.\n\nاختر طبقين رئيسيين + طبقين جانبيين + واحد مقبلات\nبعض الأطباق المميزة عليها زيادة بسيطة\nويمكن إضافة الفتّة بسعر خاص مع السفرة',
+      description: 'A warm table made for sharing\nChoose 2 mains, 2 sides, and 1 starter',
+      ar_description: 'سفرة دافئة للمشاركة.\nاختر طبقين رئيسيين + طبقين جانبيين + واحد مقبلات',
       serves: '2 people',
       ar_serves: 'شخصين',
       premium_items: [
@@ -306,8 +335,8 @@
       name: 'Ottoman Family Sofra',
       ar_name: 'سفرة العائلة العثمانية',
       price: 249,
-      description: 'A table made for sharing\nChoose 4 mains, 2 fatteh, 3 sides, and 2 starters\nSome premium dishes carry a small extra charge\nEnjoy a variety of flavors together, just like at home',
-      ar_description: 'مائدة للمشاركة مع الأحباب\nتحتوي على ٤ أطباق رئيسية، ٢ فتّة، ٣ أطباق جانبية، و٢ مقبلات\nبعض الأطباق المميزة قد تحمل رسوم إضافية بسيطة\nاستمتعوا بتشكيلة من النكهات',
+      description: 'A table made for sharing\nChoose 4 mains, 2 fatteh, 3 sides, and 2 starters',
+      ar_description: 'مائدة للمشاركة مع الأحباب\nتحتوي على ٤ أطباق رئيسية، ٢ فتّة، ٣ أطباق جانبية، و٢ مقبلات',
       serves: '4 people',
       ar_serves: '4 أشخاص',
       premium_items: [
@@ -328,8 +357,8 @@
       name: 'Lalehan Gathering',
       ar_name: 'جمعة لاليهان',
       price: 379,
-      description: 'Our most generous sharing meal\nChoose 6 mains, 3 fatteh, 5 sides, and 3 starters\nSome premium dishes carry a small extra charge\nA complete spread of Lalehan\'s signature comfort dishes, perfect for large gatherings and family meals.',
-      ar_description: 'أكبر وجبة مشاركة لدينا.\nتحتوي على ٦ أطباق رئيسية، ٣ فتّة، ٥ أطباق جانبية، و٣ مقبلات\nبعض الأطباق المميزة قد تحمل رسوم إضافية بسيطة\nتشكيلة كاملة من أطباق لالهان المميزة، مثالية للعزائم والجمعات الكبيرة',
+      description: 'Our most generous sharing meal\nChoose 6 mains, 3 fatteh, 5 sides, and 3 starters',
+      ar_description: 'أكبر وجبة مشاركة لدينا.\nتحتوي على ٦ أطباق رئيسية، ٣ فتّة، ٥ أطباق جانبية، و٣ مقبلات',
       serves: '6 people',
       ar_serves: '6 أشخاص',
       premium_items: [
@@ -377,107 +406,95 @@
       const card = document.createElement('div');
       card.className = 'combo-card';
 
-      // Header with name and serves
       const header = document.createElement('div');
       header.className = 'combo-header';
 
+      const nameGroup = document.createElement('div');
+      nameGroup.className = 'combo-name-group';
       const name = document.createElement('h3');
       name.className = 'combo-name';
       name.textContent = lang === 'ar' ? combo.ar_name : combo.name;
-
       const serves = document.createElement('p');
       serves.className = 'combo-serves';
       serves.textContent = lang === 'ar' ? combo.ar_serves : combo.serves;
+      nameGroup.appendChild(name);
+      nameGroup.appendChild(serves);
 
-      header.appendChild(name);
-      header.appendChild(serves);
+      const basePrice = document.createElement('div');
+      basePrice.className = 'combo-base-price';
+      basePrice.innerHTML = combo.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
 
-      // Body
+      header.appendChild(basePrice);
+      header.appendChild(nameGroup);
+
       const body = document.createElement('div');
       body.className = 'combo-body';
 
-      // Description
       const desc = document.createElement('p');
       desc.className = 'combo-description';
       desc.textContent = lang === 'ar' ? combo.ar_description : combo.description;
 
-      // Price section
-      const priceSection = document.createElement('div');
-      priceSection.className = 'combo-price-section';
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'choices-toggle';
+      toggleBtn.innerHTML = lang === 'ar' ? '▶ عرض الخيارات' : '▶ View choices';
+      
+      const choicesContent = document.createElement('div');
+      choicesContent.className = 'choices-content';
 
-      const priceRow = document.createElement('div');
-      priceRow.className = 'combo-price-row';
+      // Premium Items
+      const premiumTitle = document.createElement('p');
+      premiumTitle.className = 'choice-group-title';
+      premiumTitle.textContent = lang === 'ar' ? 'أطباق مميزة (إضافي)' : 'Premium Dishes (Extra)';
+      choicesContent.appendChild(premiumTitle);
 
-      const priceLabel = document.createElement('span');
-      priceLabel.className = 'combo-price-label';
-      priceLabel.textContent = lang === 'ar' ? 'السعر الأساسي' : 'Base Price';
+      combo.premium_items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'choice-item';
+        const label = document.createElement('span');
+        label.textContent = lang === 'ar' ? item.ar_name : item.name;
+        const price = document.createElement('span');
+        price.className = 'choice-price';
+        price.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+        row.appendChild(price);
+        row.appendChild(label);
+        choicesContent.appendChild(row);
+      });
 
-      const priceValue = document.createElement('span');
-      priceValue.className = 'combo-price-value';
-      priceValue.innerHTML = combo.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+      // Fatteh Items
+      const fattehTitle = document.createElement('p');
+      fattehTitle.className = 'choice-group-title';
+      fattehTitle.style.marginTop = '12px';
+      fattehTitle.textContent = lang === 'ar' ? 'خيارات الفتة' : 'Fatteh Options';
+      choicesContent.appendChild(fattehTitle);
 
-      priceRow.appendChild(priceLabel);
-      priceRow.appendChild(priceValue);
-      priceSection.appendChild(priceRow);
+      combo.fatteh_items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'choice-item';
+        const label = document.createElement('span');
+        label.textContent = lang === 'ar' ? item.ar_name : item.name;
+        const price = document.createElement('span');
+        price.className = 'choice-price';
+        if(item.price === 0) {
+          price.className += ' included';
+          price.textContent = lang === 'ar' ? 'مضمن' : 'Included';
+        } else {
+          price.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
+        }
+        row.appendChild(price);
+        row.appendChild(label);
+        choicesContent.appendChild(row);
+      });
 
-      // Premium items if any
-      if(combo.premium_items && combo.premium_items.length > 0) {
-        combo.premium_items.forEach(item => {
-          const premiumRow = document.createElement('div');
-          premiumRow.className = 'combo-price-row';
-
-          const premiumLabel = document.createElement('span');
-          premiumLabel.className = 'combo-price-label';
-          premiumLabel.textContent = lang === 'ar' ? item.ar_name : item.name;
-
-          const premiumPrice = document.createElement('span');
-          premiumPrice.className = 'combo-price-value';
-          premiumPrice.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
-
-          premiumRow.appendChild(premiumLabel);
-          premiumRow.appendChild(premiumPrice);
-          priceSection.appendChild(premiumRow);
-        });
-      }
+      toggleBtn.onclick = () => {
+        choicesContent.classList.toggle('active');
+        toggleBtn.innerHTML = choicesContent.classList.contains('active') 
+          ? (lang === 'ar' ? '▼ إخفاء الخيارات' : '▼ Hide choices')
+          : (lang === 'ar' ? '▶ عرض الخيارات' : '▶ View choices');
+      };
 
       body.appendChild(desc);
-      body.appendChild(priceSection);
-
-      // Add-ons section (Fatteh)
-      if(combo.fatteh_items && combo.fatteh_items.length > 0) {
-        const addons = document.createElement('div');
-        addons.className = 'combo-addons';
-
-        const addonTitle = document.createElement('p');
-        addonTitle.className = 'addon-title';
-        addonTitle.textContent = lang === 'ar' ? 'خيارات الفتة' : 'Fatteh Options';
-
-        addons.appendChild(addonTitle);
-
-        combo.fatteh_items.forEach(item => {
-          const addonItem = document.createElement('div');
-          addonItem.className = 'addon-item';
-
-          const addonLabel = document.createElement('span');
-          addonLabel.textContent = lang === 'ar' ? item.ar_name : item.name;
-
-          const addonPrice = document.createElement('span');
-          addonPrice.className = 'addon-price';
-          
-          if(item.price === 0) {
-            addonPrice.textContent = lang === 'ar' ? 'مضمن' : 'Included';
-            addonPrice.style.color = '#27ae60';
-          } else {
-            addonPrice.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
-          }
-
-          addonItem.appendChild(addonLabel);
-          addonItem.appendChild(addonPrice);
-          addons.appendChild(addonItem);
-        });
-
-        body.appendChild(addons);
-      }
+      body.appendChild(toggleBtn);
+      body.appendChild(choicesContent);
 
       card.appendChild(header);
       card.appendChild(body);
@@ -492,7 +509,7 @@
 
     cats.forEach(cat => {
       const activeItems = data.filter(i => i.category === cat && i.available);
-      if(activeItems.length === 0) return; // skip empty sections
+      if(activeItems.length === 0) return;
 
       const sectionTitle = document.createElement('h2');
       sectionTitle.textContent = (lang==='ar') ? (activeItems[0].ar_category || cat) : cat;
@@ -514,6 +531,7 @@
 
         const body = document.createElement('div'); body.className = 'body';
         const titleRow = document.createElement('div'); titleRow.className = 'title-row';
+        
         const title = document.createElement('div'); title.className = 'item-title';
         title.textContent = (lang==='ar') ? (item.ar_name || item.en_name) : (item.en_name || item.ar_name);
 
@@ -522,13 +540,9 @@
           price.innerHTML = item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" style="width:16px;height:16px;vertical-align:middle;margin-left:2px">';
         }
 
-        if(lang==='ar'){
-          titleRow.appendChild(price);
-          titleRow.appendChild(title);
-        } else {
-          titleRow.appendChild(title);
-          titleRow.appendChild(price);
-        }
+        // Price on Left, Title on Right
+        titleRow.appendChild(price);
+        titleRow.appendChild(title);
 
         const desc = document.createElement('div'); desc.className = 'item-desc';
         desc.textContent = (lang==='ar') ? (item.ar_desc || '') : (item.en_desc || '');
@@ -553,11 +567,6 @@
       });
 
       container.appendChild(grid);
-    });
-
-    qAll('.title-row').forEach(row=>{
-      row.style.flexDirection = lang==='ar' ? 'row-reverse' : 'row';
-      row.style.textAlign = lang==='ar' ? 'right' : 'left';
     });
 
     applyLanguageDirection();
@@ -635,7 +644,6 @@
       q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">⚠️ Please set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
     }
 
-    // Initial render
     renderCombos();
   });
   </script>
