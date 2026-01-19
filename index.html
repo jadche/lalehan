@@ -8,7 +8,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
-  <!-- CSV Parser -->
+  <!-- Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
 
   <style>
@@ -24,187 +24,268 @@
     html,body{height:100%;}
     body{
       margin:0;
-      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
       background:var(--bg);
       color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
       padding:20px;
       display:flex;
       justify-content:center;
     }
 
-    .arabic{font-family:'Amiri', Inter, serif;direction:rtl;text-align:right}
-    .wrap{width:100%;max-width:var(--max-width)}
+    .wrap{width:100%;max-width:var(--max-width);}
 
-    header{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:14px;box-shadow:var(--card-shadow);margin-bottom:18px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:18px;border-radius:14px;box-shadow:var(--card-shadow);background:#fff;margin-bottom:18px;
+    }
 
-    .lang-toggle{display:flex;gap:6px;border:1px solid #eee;padding:6px;border-radius:999px}
-    .lang-toggle button{border:0;background:none;padding:6px 12px;font-weight:600;cursor:pointer;border-radius:999px}
-    .lang-toggle button.active{background:var(--accent);color:#fff}
+    .brand{
+      display:flex;align-items:center;gap:14px;
+    }
+    .logo{width:58px;height:58px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#5b2916);overflow:hidden;display:block;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;}
+    .brand h1{margin:0;font-size:20px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
 
-    h2.section-title{margin:16px 0 8px}
+    .controls{display:flex;gap:12px;align-items:center}
+    .lang-toggle{display:flex;align-items:center;background:#fff;border-radius:999px;padding:6px;border:1px solid #eee;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
+    .lang-toggle button{border:0;background:transparent;padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600}
+    .lang-toggle button.active{background:var(--accent);color:white}
 
-    /* NORMAL ITEMS */
+    main{display:block;}
+
+    .menu-area{display:flex;flex-direction:column;gap:18px}
     .category-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-    .card{background:#fff;border-radius:var(--radius);box-shadow:var(--card-shadow);overflow:hidden}
-    .media{height:150px;background:#f3f3f3}
-    .media img{width:100%;height:100%;object-fit:cover}
-    .body{padding:12px}
-    .title-row{display:flex;justify-content:space-between;gap:8px}
-    .item-title{font-weight:700}
-    .item-desc{font-size:13px;color:var(--muted);margin-top:6px}
-    .price{font-weight:800;color:var(--accent)}
 
-    /* COMBOS */
-    .combo-card{background:#fff;border-radius:var(--radius);box-shadow:var(--card-shadow);padding:18px;margin-bottom:14px}
-    .combo-header{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-    .combo-title{font-weight:700;font-size:18px}
-    .combo-desc{margin:10px 0;color:var(--muted);font-size:14px}
-    .combo-meta{font-size:14px;margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap}
-    details{border-top:1px dashed #ddd;padding-top:10px}
-    summary{cursor:pointer;color:var(--accent);font-weight:600}
-    .choice-group{margin-top:8px;font-size:14px}
-    .addons{margin-top:10px;font-size:14px}
-    .addon{display:inline-block;border:1px solid #ddd;border-radius:999px;padding:4px 10px;margin:4px 6px 0 0}
+    .card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--card-shadow);display:flex;flex-direction:column}
+    .card .media{height:160px;background:#f3f3f3;display:flex;align-items:center;justify-content:center}
+    .card img{width:100%;height:100%;object-fit:cover}
+    .card .body{padding:12px}
+    .title-row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+    .item-title{font-weight:700;margin:0;font-size:16px}
+    .item-desc{margin:8px 0 0 0;color:var(--muted);font-size:13px}
+    .price{font-weight:800;color:var(--accent);font-size:15px}
+
+    footer{margin-top:20px;padding:8px 0;color:var(--muted);font-size:13px;text-align:center}
+
+    .arabic{font-family: 'Amiri', 'Inter', serif;direction:rtl;text-align:right}
   </style>
 </head>
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="https://i.imgur.com/Fub0z8r.jpeg" alt="Lalehan Logo" style="width:100%;height:100%;object-fit:contain;display:block;">
+        </div>
+        <div>
+          <h1 id="brandName">Lalehan</h1>
+          <p id="brandTag">نكهات تُطهى بشغف</p>
+        </div>
+      </div>
 
-<header>
-  <strong id="brandName">لاليهان</strong>
-  <div class="lang-toggle">
-    <button id="btn-ar" class="active">ع</button>
-    <button id="btn-en">EN</button>
+      <div class="controls">
+        <div class="lang-toggle" role="tablist" aria-label="Language Switch">
+          <button id="btn-en">EN</button>
+          <button id="btn-ar" class="active">ع</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="menu-area">
+        <div id="menuContent"></div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contactSection" style="margin-top:30px;padding:16px;background:#fff;border-radius:12px;box-shadow:var(--card-shadow)">
+        <h2 id="contactTitle">Contact</h2>
+        <p id="contactPhone">Phone: <a href="tel:+966500000000">050 000 0000</a></p>
+        <p id="contactHours"></p>
+        <p id="contactDirections"><a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Our location</a></p>
+        <p id="contactAddress"></p>
+      </section>
+    </main>
+
+    <footer>
+      <div id="footerText"></div>
+    </footer>
   </div>
-</header>
 
-<main id="menuContent"></main>
+  <script>
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpzs_8lITELomoxjkf_Pk2prXu26ZiF3Xyf1i3Ef68qgKTXAzeb1VdJyfcpzBIhNGux2apV7Rz2lTt/pub?output=csv";
+  const BRAND = {nameEn: 'Lalehan', nameAr: 'لاليهان'};
+  let data = [], lang = 'ar';
 
-</div>
+  function q(sel, el=document){return el.querySelector(sel)}
+  function qAll(sel, el=document){return Array.from(el.querySelectorAll(sel))}
 
-<script>
-const SHEET_CSV_URL = 'online_menu - Items.csv';
-let lang = 'ar';
-let data = [];
-
-function parseCSV(text){
-  return Papa.parse(text,{header:true,skipEmptyLines:true}).data;
-}
-
-function render(){
-  const root = document.documentElement;
-  const wrap = document.querySelector('.wrap');
-  root.lang = lang;
-  root.dir = lang === 'ar' ? 'rtl':'ltr';
-  wrap.classList.toggle('arabic', lang==='ar');
-
-  document.getElementById('brandName').textContent = lang==='ar'?'لاليهان':'Lalehan';
-
-  const container = document.getElementById('menuContent');
-  container.innerHTML='';
-
-  /* COMBOS FIRST */
-  const combos = data.filter(i=>i.category==='Combo');
-  if(combos.length){
-    const title = document.createElement('h2');
-    title.className='section-title';
-    title.textContent = lang==='ar'?'الوجبات المشتركة':'Combo Meals';
-    container.appendChild(title);
-
-    combos.forEach(c=>container.appendChild(renderCombo(c)));
+  function parseCSVText(csvText){
+    const parsed = Papa.parse(csvText, {header:true, skipEmptyLines:true});
+    return parsed.data.map(row => ({
+      id: row.id || Math.random().toString(36).slice(2,9),
+      category: (row.category||'Uncategorized').trim(),
+      ar_category: row.ar_category || (row.category||'Uncategorized').trim(),
+      price: row.price || '',
+      ar_name: row.ar_name || '',
+      en_name: row.en_name || '',
+      ar_desc: row.ar_desc || '',
+      en_desc: row.en_desc || '',
+      calories: row.calories || '',
+      image_url: row.image_url || '',
+      available: (String(row.available||'TRUE').toLowerCase() !== 'false')
+    }));
   }
 
-  /* OTHER CATEGORIES */
-  const categories = [...new Set(data.filter(i=>i.category!=='Combo').map(i=>i.category))];
+  function renderMenu(){
+    const container = q('#menuContent');
+    container.innerHTML = '';
+    const cats = [...new Set(data.map(i => i.category))];
 
-  categories.forEach(cat=>{
-    const items = data.filter(i=>i.category===cat);
-    if(!items.length) return;
+    cats.forEach(cat => {
+      const activeItems = data.filter(i => i.category === cat && i.available);
+      if(activeItems.length === 0) return; // skip empty sections
 
-    const h = document.createElement('h2');
-    h.className='section-title';
-    h.textContent = lang==='ar'?items[0].ar_category:cat;
-    container.appendChild(h);
+      const sectionTitle = document.createElement('h2');
+      sectionTitle.textContent = (lang==='ar') ? (activeItems[0].ar_category || cat) : cat;
+      sectionTitle.style.margin = '6px 0 6px 0';
+      container.appendChild(sectionTitle);
 
-    const grid = document.createElement('div');
-    grid.className='category-section';
+      const grid = document.createElement('div');
+      grid.className = 'category-section';
 
-    items.forEach(item=>grid.appendChild(renderItem(item)));
-    container.appendChild(grid);
+      activeItems.forEach(item => {
+        const card = document.createElement('div'); card.className = 'card';
+        const media = document.createElement('div'); media.className = 'media';
+        if(item.image_url){
+          const img = document.createElement('img'); img.src = item.image_url; img.alt = item.en_name || item.ar_name;
+          media.appendChild(img);
+        } else {
+          media.textContent = (lang==='ar') ? item.ar_name || item.en_name : item.en_name || item.ar_name;
+        }
+
+        const body = document.createElement('div'); body.className = 'body';
+        const titleRow = document.createElement('div'); titleRow.className = 'title-row';
+        const title = document.createElement('div'); title.className = 'item-title';
+        title.textContent = (lang==='ar') ? (item.ar_name || item.en_name) : (item.en_name || item.ar_name);
+
+        const price = document.createElement('div'); price.className = 'price';
+        if(item.price){
+          price.innerHTML = item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" style="width:16px;height:16px;vertical-align:middle;margin-left:2px">';
+        }
+
+        if(lang==='ar'){
+          titleRow.appendChild(price);
+          titleRow.appendChild(title);
+        } else {
+          titleRow.appendChild(title);
+          titleRow.appendChild(price);
+        }
+
+        const desc = document.createElement('div'); desc.className = 'item-desc';
+        desc.textContent = (lang==='ar') ? (item.ar_desc || '') : (item.en_desc || '');
+
+        body.appendChild(titleRow);
+        body.appendChild(desc);
+
+        if(item.calories){
+          const cal = document.createElement('div');
+          cal.style.marginTop = '6px';
+          cal.style.fontSize = '12px';
+          cal.style.color = '#7D3C1F';
+          cal.textContent = lang === 'ar'
+            ? item.calories + 'سعرة'
+            : item.calories + ' kcal';
+          body.appendChild(cal);
+        }
+
+        card.appendChild(media);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    });
+
+    qAll('.title-row').forEach(row=>{
+      row.style.flexDirection = lang==='ar' ? 'row-reverse' : 'row';
+      row.style.textAlign = lang==='ar' ? 'right' : 'left';
+    });
+
+    applyLanguageDirection();
+  }
+
+  function applyLanguageDirection(){
+    const root = document.documentElement;
+    const wrap = document.querySelector('.wrap');
+
+    if(lang === 'ar'){
+      wrap.classList.add('arabic');
+      root.lang = 'ar';
+      root.dir = 'rtl';
+      q('#brandName').textContent = BRAND.nameAr;
+      q('#brandTag').textContent = 'نكهات تُطهى بشغف';
+      q('#footerText').innerHTML = '🍴 مطعم تركي • 🛍️ Grab & Go';
+
+      q('#contactTitle').textContent = 'تواصل معنا';
+      q('#contactPhone').innerHTML = 'الهاتف: <a href="tel:+966500000000">050 000 0000</a>';
+      q('#contactHours').innerHTML = 'ساعات العمل:<br>الأحد – الخميس: 11 صباحاً – 1 صباحاً<br>الجمعة: 1 مساءً – 1 صباحاً';
+      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">موقعنا</a>';
+      q('#contactAddress').textContent = 'حازم بن عطاء، وادي محضر، المدينة المنورة';
+
+      q('#btn-en').classList.remove('active');
+      q('#btn-ar').classList.add('active');
+    } else {
+      wrap.classList.remove('arabic');
+      root.lang = 'en';
+      root.dir = 'ltr';
+      q('#brandName').textContent = BRAND.nameEn;
+      q('#brandTag').textContent = '';
+      q('#footerText').innerHTML = '🍴 Turkish Restaurant • 🛍️ Grab & Go';
+
+      q('#contactTitle').textContent = 'Contact';
+      q('#contactPhone').innerHTML = 'Phone: <a href="tel:+966500000000">050 000 0000</a>';
+      q('#contactHours').innerHTML = 'Open: 11:00 AM – 1:00 AM (Sun–Thu)<br>Friday: 1:00 PM – 1:00 AM';
+      q('#contactDirections').innerHTML = '<a href="https://maps.app.goo.gl/SsmKjYCcSftRwVDd8" target="_blank">Our location</a>';
+      q('#contactAddress').textContent = 'Hazem Bin Atta, Wadi Mahzur, Madina';
+
+      q('#btn-en').classList.add('active');
+      q('#btn-ar').classList.remove('active');
+    }
+  }
+
+  async function fetchSheet(){
+    try{
+      const res = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      data = parseCSVText(text);
+      renderMenu();
+    }catch(err){
+      console.error('Failed to load sheet', err);
+      q('#menuContent').innerHTML = `
+        <div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">
+          Failed to load the menu. Please check the Google Sheet publishing settings.
+        </div>`;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    q('#btn-en').addEventListener('click', ()=>{
+      lang = 'en';
+      renderMenu();
+    });
+
+    q('#btn-ar').addEventListener('click', ()=>{
+      lang = 'ar';
+      renderMenu();
+    });
+
+    if(SHEET_CSV_URL && !SHEET_CSV_URL.includes('REPLACE_WITH')) fetchSheet();
+    else {
+      q('#menuContent').innerHTML = '<div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">⚠️ Please set the SHEET_CSV_URL to your published Google Sheet CSV URL.</div>';
+    }
   });
-}
-
-function renderCombo(c){
-  const div=document.createElement('div');
-  div.className='combo-card';
-
-  const name = lang==='ar'?c.ar_name:c.en_name;
-  const desc = lang==='ar'?c.ar_desc:c.en_desc;
-  const includes = lang==='ar'?c.ar_includes:c.en_includes;
-  const serves = lang==='ar'?c.ar_serves:c.en_serves;
-  const choices = lang==='ar'?c.ar_choices:c.en_choices;
-  const addons = lang==='ar'?c.ar_addons:c.en_addons;
-
-  div.innerHTML=`
-    <div class="combo-header">
-      <div class="combo-title">${name}</div>
-      <div class="price">${c.price}</div>
-    </div>
-    <div class="combo-desc">${desc||''}</div>
-    <div class="combo-meta">
-      ${includes?`<div><strong>${lang==='ar'?'يشمل':'Includes'}:</strong> ${includes}</div>`:''}
-      ${serves?`<div><strong>${lang==='ar'?'يكفي':'Serves'}:</strong> ${serves}</div>`:''}
-    </div>
-    <details>
-      <summary>${lang==='ar'?'عرض الخيارات':'View choices'}</summary>
-      ${renderChoices(choices)}
-      ${addons?`<div class="addons"><strong>${lang==='ar'?'إضافات':'Add-ons'}:</strong><br>${renderAddons(addons)}</div>`:''}
-    </details>`;
-  return div;
-}
-
-function renderChoices(raw){
-  if(!raw) return '';
-  return raw.split('||').map(g=>{
-    const [t,i]=g.split(':');
-    return `<div class="choice-group"><strong>${t}</strong>${i||''}</div>`;
-  }).join('');
-}
-
-function renderAddons(raw){
-  return raw.split(';').map(a=>`<span class="addon">${a}</span>`).join('');
-}
-
-function renderItem(item){
-  const card=document.createElement('div');
-  card.className='card';
-
-  const media=document.createElement('div');media.className='media';
-  if(item.image_url){const img=document.createElement('img');img.src=item.image_url;media.appendChild(img)}
-
-  const body=document.createElement('div');body.className='body';
-  const titleRow=document.createElement('div');titleRow.className='title-row';
-
-  const title=document.createElement('div');title.className='item-title';
-  title.textContent=lang==='ar'?item.ar_name:item.en_name;
-
-  const price=document.createElement('div');price.className='price';price.textContent=item.price||'';
-
-  titleRow.appendChild(lang==='ar'?price:title);
-  titleRow.appendChild(lang==='ar'?title:price);
-
-  const desc=document.createElement('div');desc.className='item-desc';
-  desc.textContent=lang==='ar'?item.ar_desc:item.en_desc;
-
-  body.appendChild(titleRow);body.appendChild(desc);
-  card.appendChild(media);card.appendChild(body);
-  return card;
-}
-
-fetch(SHEET_CSV_URL).then(r=>r.text()).then(t=>{data=parseCSV(t);render()});
-
-btn_ar.onclick=()=>{lang='ar';btn_ar.classList.add('active');btn_en.classList.remove('active');render()};
-btn_en.onclick=()=>{lang='en';btn_en.classList.add('active');btn_ar.classList.remove('active');render()};
-</script>
+  </script>
 </body>
 </html>
