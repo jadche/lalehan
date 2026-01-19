@@ -240,15 +240,15 @@
 
     /* RTL Alignment Fixes */
     .arabic .title-row {
-      flex-direction: row-row-reverse; /* Keep Price on Left, Title on Right in RTL */
+      flex-direction: row-reverse; /* Keep Price on Left, Title on Right in RTL */
     }
 
     .arabic .combo-header {
-      flex-direction: row-row-reverse; /* Keep Price on Left, Name on Right in RTL */
+      flex-direction: row-reverse; /* Keep Price on Left, Name on Right in RTL */
     }
 
     .arabic .choice-item {
-      flex-direction: row-row-reverse; /* Keep Price on Left, Label on Right in RTL */
+      flex-direction: row-reverse; /* Keep Price on Left, Label on Right in RTL */
     }
 
     .sar-icon {
@@ -312,38 +312,38 @@
       id: 'combo_1',
       name: 'Lalehan Sofra',
       ar_name: 'سفرة لاليهان',
-      price: 99,
+      price: 79,
       description: 'A warm table made for sharing\nChoose 2 mains, 2 sides, and 1 starter',
-      ar_description: 'سفرة دافئة للمشاركة.\nاختر طبقين رئيسيين + طبقين جانبيين + واحد مقبلات',
-      serves: '2 people',
-      ar_serves: 'شخصين',
+      ar_description: 'سفرة دافئة للمشاركة\nتحتوي على طبقين رئيسيين + طبقين جانبيين + واحد مقبلات',
+      serves: '2-3 people',
+      ar_serves: '2-3 أشخاص',
       premium_items: [
-        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
-        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
-        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
-        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 3 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 3 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 3 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 5 }
       ],
       fatteh_items: [
-        { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 14 },
-        { name: 'Eggplant Fatteh', ar_name: 'فتة باذنجان', price: 14 },
-        { name: 'Chicken Fatteh', ar_name: 'فتة دجاج بالسماق (مسخن)', price: 16 },
-        { name: 'Pasha Eggplant Fatteh', ar_name: 'فتة باذنجان باللحم', price: 18 }
+        { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 15 },
+        { name: 'Eggplant Fatteh', ar_name: 'فتة باذنجان', price: 15 },
+        { name: 'Chicken Fatteh', ar_name: 'فتة دجاج بالسماق (مسخن)', price: 18 },
+        { name: 'Pasha Eggplant Fatteh', ar_name: 'فتة باذنجان باللحم', price: 20 }
       ]
     },
     {
       id: 'combo_2',
       name: 'Ottoman Family Sofra',
       ar_name: 'سفرة العائلة العثمانية',
-      price: 249,
+      price: 199,
       description: 'A table made for sharing\nChoose 4 mains, 2 fatteh, 3 sides, and 2 starters',
-      ar_description: 'مائدة للمشاركة مع الأحباب\nتحتوي على ٤ أطباق رئيسية، ٢ فتّة، ٣ أطباق جانبية، و٢ مقبلات',
-      serves: '4 people',
+      ar_description: 'مائدة للمشاركة مع الأحباب\nتحتوي على ٤ أطباق رئيسية + ٢ فتّة + ٣ أطباق جانبية + و٢ مقبلات',
+      serves: '4-5 people',
       ar_serves: '4 أشخاص',
       premium_items: [
-        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
-        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
-        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
-        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 3 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 3 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 3 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 5 }
       ],
       fatteh_items: [
         { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 0 },
@@ -356,16 +356,16 @@
       id: 'combo_3',
       name: 'Lalehan Gathering',
       ar_name: 'جمعة لاليهان',
-      price: 379,
+      price: 299,
       description: 'Our most generous sharing meal\nChoose 6 mains, 3 fatteh, 5 sides, and 3 starters',
-      ar_description: 'أكبر وجبة مشاركة لدينا.\nتحتوي على ٦ أطباق رئيسية، ٣ فتّة، ٥ أطباق جانبية، و٣ مقبلات',
-      serves: '6 people',
-      ar_serves: '6 أشخاص',
+      ar_description: 'أكبر وجبة مشاركة لدينا\nتحتوي على ٦ أطباق رئيسية + ٣ فتّة + ٥ أطباق جانبية + و٣ مقبلات',
+      serves: '6-8 people',
+      ar_serves: '6-8 أشخاص',
       premium_items: [
-        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 5 },
-        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 5 },
-        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 5 },
-        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 7 }
+        { name: 'Kibbeh Labanieh', ar_name: 'كبة بلبن', price: 3 },
+        { name: 'Lalehan Mix (Labanieh)', ar_name: 'لبنية لاليهان', price: 3 },
+        { name: 'Creamy Lemon Chicken', ar_name: 'دجاج بكريمة الليمون', price: 3 },
+        { name: 'Izmir Kofta', ar_name: 'كفتة إزمير', price: 5 }
       ],
       fatteh_items: [
         { name: 'Yaprak Dolma Fatteh', ar_name: 'فتة ورق عنب', price: 0 },
@@ -476,7 +476,7 @@
         price.className = 'choice-price';
         if(item.price === 0) {
           price.className += ' included';
-          price.textContent = lang === 'ar' ? 'مضمن' : 'Included';
+          price.textContent = lang === 'ar' ? 'ضمن العرض' : 'Included';
         } else {
           price.innerHTML = '+' + item.price + ' <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saudi_Riyal_Symbol.svg/2560px-Saudi_Riyal_Symbol.svg.png" alt="SAR" class="sar-icon">';
         }
